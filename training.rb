@@ -1,15 +1,5 @@
-number = 48
+# 変数languagesに、複数の文字列を要素に持つ配列を代入してください
+languages=["日本語", "英語", "スペイン語"]
 
-# 条件分岐を作成してください
-if number % 3 == 0 && number % 5 == 0
-    puts "15の倍数です"
-
-elsif number % 5 == 0
-    puts "5の倍数です"
-
-elsif number % 3 == 0
-    puts "3の倍数です"
-
-else
-    puts "3の倍数でも5の倍数でもありません"
-end
+# 変数languagesを出力してください
+puts languages
