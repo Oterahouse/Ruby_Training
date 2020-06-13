@@ -1,7 +1,21 @@
-languages = ["日本語", "英語", "スペイン語"]
+class Menu
+  attr_accessor :name
+  attr_accessor :price
 
-# インデックス番号が1の要素を出力してください
-puts languages[1]
-
-# インデックス番号が0の要素を使って「◯◯を話せます」となるように出力してください
-puts "#{languages[0]}を話せます"
+  def initialize(name:, price:)
+    self.name = name
+    self.price = price
+  end
+  
+  def info
+    return "#{self.name} #{self.price}円"
+  end
+  
+  def get_total_price(count)
+    total_price = self.price * count
+    if count >= 3
+      total_price -= 100
+    end
+    return total_price
+  end
+end
