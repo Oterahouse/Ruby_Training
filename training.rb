@@ -1,7 +1,6 @@
 class PostsController < ApplicationController
   def index
-    # Post.allにorderメソッドを用いて、新しい投稿が上から順に表示されるようにしてください
-    @posts = Post.all.order(created_ad, :desc)
+    @posts = Post.all.order(created_at: :desc)
   end
   
   def show
@@ -16,4 +15,24 @@ class PostsController < ApplicationController
     @post.save
     redirect_to("/posts/index")
   end
+  
+  def edit
+    @post = Post.find_by(id: params[:id])
+  end
+  
+  def update
+    @post = Post.find_by(id: params[:id])
+    @post.content = params[:content]
+    @post.save
+    redirect_to("/posts/index")
+  end
+  
+  def destroy
+    # destroyアクションの中身を作成してください
+    @post = Post.find_by(id: params[:id])
+    @post.destroy
+    @post.save
+    redirect_to("/posts/index")
+  end
+  
 end
