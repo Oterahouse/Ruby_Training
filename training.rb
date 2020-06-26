@@ -1,79 +1,60 @@
-class UsersController < ApplicationController
-  
-  def index
-    @users = User.all
-  end
-  
-  def show
-    @user = User.find_by(id: params[:id])
-  end
-  
-  def new
-    @user = User.new
-  end
-  
-  def create
-    @user = User.new(
-      name: params[:name],
-      email: params[:email],
-      image_name: "default_user.jpg",
-      # params[:password]をnewメソッドの引数に追加してください
-      
-    )
-    if @user.save
-      # 登録されたユーザーのidを変数sessionに代入してください
-      
-      flash[:notice] = "ユーザー登録が完了しました"
-      redirect_to("/users/#{@user.id}")
-    else
-      render("users/new")
-    end
-  end
-  
-  def edit
-    @user = User.find_by(id: params[:id])
-  end
-  
-  def update
-    @user = User.find_by(id: params[:id])
-    @user.name = params[:name]
-    @user.email = params[:email]
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>TweetApp</title>
+    <%= csrf_meta_tags %>
+
+    <%= stylesheet_link_tag    'application', media: 'all', 'data-turbolinks-track': 'reload' %>
+    <%= javascript_include_tag 'application', 'data-turbolinks-track': 'reload' %>
+  </head>
+
+  <body>
+    <header>
+      <div class="header-logo">
+        <%= link_to("TweetApp", "/") %>
+      </div>
+      <ul class="header-menus">
+        <!-- 以下の1行を削除してください -->
+        <% current_user = User.find_by(id: session[:user_id]) %>
+        
+        <!-- @current_userに書き換えてください -->å
+        <% if current_user %>
+          <li>
+            <!-- @current_userに書き換えてください -->
+            <%= link_to(current_user.name, "/users/#{current_user.id}") %>
+          </li>
+          <li>
+            <%= link_to("投稿一覧", "/posts/index") %>
+          </li>
+          <li>
+            <%= link_to("新規投稿", "/posts/new") %>
+          </li>
+          <li>
+            <%= link_to("ユーザー一覧", "/users/index") %>
+          </li>
+          <li>
+            <%= link_to("ログアウト", "/logout", {method: :post}) %>
+          </li>
+        <% else %>
+          <li>
+            <%= link_to("TweetAppとは", "/about") %>
+          </li>
+          <li>
+            <%= link_to("新規登録", "/signup") %>
+          </li>
+          <li>
+            <%= link_to("ログイン", "/login") %>
+          </li>
+        <% end %>
+      </ul>
+    </header>
+
+    <% if flash[:notice] %>
+      <div class="flash">
+        <%= flash[:notice] %>
+      </div>
+    <% end %>
     
-    if params[:image]
-      @user.image_name = "#{@user.id}.jpg"
-      image = params[:image]
-      File.binwrite("public/user_images/#{@user.image_name}", image.read)
-    end
-    
-    if @user.save
-      flash[:notice] = "ユーザー情報を編集しました"
-      redirect_to("/users/#{@user.id}")
-    else
-      render("users/edit")
-    end
-  end
-  
-  def login_form
-  end
-  
-  def login
-    @user = User.find_by(email: params[:email], password: params[:password])
-    if @user
-      session[:user_id] = @user.id
-      flash[:notice] = "ログインしました"
-      redirect_to("/posts/index")
-    else
-      @error_message = "メールアドレスまたはパスワードが間違っています"
-      @email = params[:email]
-      @password = params[:password]
-      render("users/login_form")
-    end
-  end
-  
-  def logout
-    session[:user_id] = nil
-    flash[:notice] = "ログアウトしました"
-    redirect_to("/login")
-  end
-  
-end
+    <%= yield %>
+  </body>
+</html>
