@@ -1,64 +1,37 @@
-class PostsController < ApplicationController
-  before_action :authenticate_user
-  # before_actionでensure_correct_userメソッドを指定してください
-  before_action :ensure_correct_user, {only: [:edit, :update, :destroy]}
-  
-  def index
-    @posts = Post.all.order(created_at: :desc)
-  end
-  
-  def show
-    @post = Post.find_by(id: params[:id])
-    @user = @post.user
-  end
-  
-  def new
-    @post = Post.new
-  end
-  
-  def create
-    @post = Post.new(
-      content: params[:content],
-      user_id: @current_user.id
-    )
-    if @post.save
-      flash[:notice] = "投稿を作成しました"
-      redirect_to("/posts/index")
-    else
-      render("posts/new")
-    end
-  end
-  
-  def edit
-    @post = Post.find_by(id: params[:id])
-  end
-  
-  def update
-    @post = Post.find_by(id: params[:id])
-    @post.content = params[:content]
-    if @post.save
-      flash[:notice] = "投稿を編集しました"
-      redirect_to("/posts/index")
-    else
-      render("posts/edit")
-    end
-  end
-  
-  def destroy
-    @post = Post.find_by(id: params[:id])
-    @post.destroy
-    flash[:notice] = "投稿を削除しました"
-    redirect_to("/posts/index")
-  end
-  
-  # ensure_correct_userメソッドを定義してください
-  def ensure_correct_user
-    @post = Post.find_by(id: params[:id])
-    if @post.user_id != @current_user.id
-      flash[:notice] = "権限がありません"
-      redirect_to("/posts/index")
-    end
-  end
-  
-  
-end
+<!-- 指定されたコードを貼り付けてください -->
+<div class="main user-show">
+  <div class="container">
+    <div class="user">
+      <img src="<%= "/user_images/#{@user.image_name}" %>">
+      <h2><%= @user.name %></h2>
+      <p><%= @user.email %></p>
+      <% if @user.id == @current_user.id %>
+        <%= link_to("編集", "/users/#{@user.id}/edit") %>
+      <% end %>
+    </div>
+    
+    <ul class="user-tabs">
+      <li><%= link_to("投稿", "/users/#{@user.id}") %></li>
+      <li class="active"><%= link_to("いいね!", "/users/#{@user.id}/likes") %></li>
+    </ul>
+    
+    <!-- 変数@likesに対してeach文を用いてください -->
+    <% @likes.each do |like| %>
+      <!-- 変数postを定義してください -->
+      <% post = Post.find_by(id: like.post_id) %>
+      
+      <div class="posts-index-item">å
+        <div class="post-left">
+          <img src="<%= "/user_images/#{post.user.image_name}" %>">
+        </div>
+        <div class="post-right">
+          <div class="post-user-name">
+            <%= link_to(post.user.name, "/users/#{post.user.id}") %>
+          </div>
+          <%= link_to(post.content, "/posts/#{post.id}") %>
+        </div>
+      </div>
+    <!-- each文のendを追加してください -->
+    <% end %>
+  </div>
+</div>
