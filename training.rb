@@ -31,7 +31,6 @@
           <%= link_to(post.content, "/posts/#{post.id}") %>
         </div>
       </div>
-    <!-- each文のendを追加してください -->
     <% end %>
   </div>
 </div>
